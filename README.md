@@ -2,32 +2,36 @@
   <img src="./public/portfolio-readme-preview.png" alt="Mbuyelo Maluleke portfolio homepage" width="100%" />
 </p>
 
-## Project Overview
+# Mbuyelo Maluleke — AI & Full-Stack Engineer
 
-Personal portfolio and blog, live at [buddhsentripathi.com](https://buddhsentripathi.com). Built with Next.js 16 (App Router), TypeScript, Tailwind v4, and an MDX-powered blog backed by Cloudflare R2 and Supabase. The focus is on performance, SEO, and a clean developer experience.
+I build practical software across **LLM-powered applications, AI agents, image-AI workflows, and full-stack products**. My work combines AI engineering with product-focused web development, using LangChain, TypeScript, Java, and modern cloud services.
+
+This portfolio brings together my **projects, professional experience, hackathon builds, and technical writing** in one place. It is built with Next.js, React, TypeScript, and Tailwind CSS.
+
+I currently work across front-end design and AI development at **High Hype**, and I am continuing to deepen my skills in AI-powered product development.
 
 ## Features
 
 ### Core Pages
--   **Home:** Hero with bio, contribution graph, social links, hackathons feed, and CTA
--   **Projects:** Project showcase with tech badges, GitHub stars, and live previews
--   **Blogs:** Technical and personal articles with view counters, TOC, and tabbed navigation
+-   **About:** Profile, AI and full-stack engineering focus, social links, and GitHub contribution graph
+-   **Projects:** Selected product and open-source work, including DeepFind.Me, Bucket0, Nimu, and OpenVScan
 -   **Experience:** Timeline of professional work with responsibilities and stack
--   **Hackathons, Research, Newsletter:** Dedicated pages for each
+-   **Hackathons:** Competition results and project builds, including Hlokomela, an IoT water-intelligence platform that placed 4th at TCS Sustainathon South Africa 2026
+-   **Blogs:** Technical articles and personal writing with reading time, table of contents, and view counts
+-   **Research and Newsletter:** Dedicated pages for publications and email updates
 
 ### Blog System
--   MDX posts stored on Cloudflare R2 and rendered with `next-mdx-remote`
--   Per-post view counter backed by Supabase with batched fetches
--   Table of contents, reading time, and syntax highlighting via `highlight.js`
--   RSS feed (`/feed.xml`) and dynamic sitemap (`/sitemap.xml`)
+-   MDX-powered articles with formatted code, headings, and links
+-   Table of contents, reading time, and syntax highlighting
+-   RSS feed (`/feed.xml`) and sitemap (`/sitemap.xml`)
+-   View counts and newsletter features use the configured service integrations
 
 ### Additional Features
 -   **Dark/Light Mode:** Theme toggling via `next-themes`
--   **Newsletter:** Email sign-ups backed by Supabase
--   **Visitor Counter:** Tracks unique visitors
+-   **Responsive UI:** Mobile-friendly layouts with animated transitions
+-   **GitHub Integration:** Contribution activity, repository star counts, and profile links
+-   **Contact:** Direct email link from the homepage
 -   **SEO Optimized:** Full JSON-LD (Person, Website, ProfilePage, BlogPosting, Breadcrumb) plus per-page OpenGraph, Twitter cards, and canonical URLs
--   **Analytics:** Google Analytics integration
--   **Animations:** Smooth transitions with Motion (ex-Framer Motion)
 
 ## Tech Stack
 
@@ -38,10 +42,11 @@ Personal portfolio and blog, live at [buddhsentripathi.com](https://buddhsentrip
 | **Runtime / Package Manager** | [Bun](https://bun.sh) |
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) v4, [shadcn/ui](https://ui.shadcn.com/), [Radix UI](https://radix-ui.com/) |
 | **Animation** | [Motion](https://motion.dev/) |
-| **Database** | [Supabase](https://supabase.io/) (views & subscribers) |
-| **Storage** | [Cloudflare R2](https://www.cloudflare.com/r2/) (blog content & images) |
-| **Content** | [MDX](https://mdxjs.com/) with `next-mdx-remote` |
+| **Integrations** | GitHub API, Supabase, Cloudflare R2 |
+| **Content** | MDX and React |
 | **Deployment** | [Vercel](https://vercel.com/) |
+
+Featured project technologies also include **Python, FastAPI, Java, Spring Boot, LangChain, TensorFlow, Apache Kafka, and TimescaleDB**.
 
 ## Getting Started
 
@@ -58,11 +63,11 @@ Follow these steps to get the project running locally:
     bun install
     ```
 
-3.  **Personalize the site:**
-    Open [`src/site.config.ts`](src/site.config.ts) and update identity, contact info, socials, SEO defaults, nav, and content lists. This is the single source of truth — see [Customization](#customization) below.
+3.  **Configure the portfolio:**
+    Update identity, contact info, socials, SEO defaults, navigation, and portfolio content in [`src/site.config.ts`](src/site.config.ts).
 
-4.  **Set up Environment Variables:**
-    Copy `.env.example` to `.env.local` and fill in your credentials (see [Environment Variables](#environment-variables) section below).
+4.  **Configure optional integrations:**
+    The site can run locally without credentials. For GitHub, Supabase, analytics, or Cloudflare R2-backed features, copy `.env.example` to `.env.local` and add the relevant values.
 
 5.  **Run the development server:**
     ```bash
@@ -72,14 +77,14 @@ Follow these steps to get the project running locally:
 
 ## Customization
 
-All site content and SEO flow from a single file: [`src/site.config.ts`](src/site.config.ts). Edit it once and every page, metadata tag, JSON-LD schema, RSS feed, and sitemap updates automatically.
+Portfolio identity, contact links, social profiles, navigation, SEO defaults, experience, projects, and hackathons are configured in [`src/site.config.ts`](src/site.config.ts). Blog content lives alongside the blog routes in `src/app/blogs/`.
 
 ### Sections in `site.config.ts`
 
 | Section | Controls |
 |---------|----------|
 | `identity` | Name, title, tagline, bio, rotating intros |
-| `contact` | Email, production URL, Cal.com, resume path |
+| `contact` | Email and portfolio URL |
 | `assets` | Default OG image, blog OG image, favicon |
 | `socials` | Twitter, GitHub, LinkedIn, LeetCode, TryHackMe, Codeforces |
 | `seo` | Title template, default title/description, keywords, Twitter handle, theme color |
@@ -127,26 +132,16 @@ This automatically fills in canonical URL, OpenGraph tags, Twitter card, site na
 
 ## Environment Variables
 
-Create a `.env.local` file with the following variables:
+All environment variables are optional for local development. Add only the values needed for the integrations you enable:
 
-### Required
-| Variable | Description |
-|----------|-------------|
-| `SUPABASE_URL` | Supabase project URL (server-side) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key |
-| `R2_ACCESS_KEY_ID` | Cloudflare R2 access key |
-| `R2_SECRET_ACCESS_KEY` | Cloudflare R2 secret key |
-| `R2_BUCKET_NAME` | R2 bucket name for blog content |
-| `R2_ENDPOINT` | R2 endpoint URL |
-| `R2_ACCOUNT_ID` | Cloudflare account ID |
+| Variables | Used for |
+|-----------|----------|
+| `GITHUB_TOKEN` | Authenticated GitHub API requests |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Supabase-backed blog views and newsletter sign-ups |
+| `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_ENDPOINT`, `R2_ACCOUNT_ID` | Cloudflare R2-backed content and asset tooling |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics |
 
-### Optional
-| Variable | Description |
-|----------|-------------|
-| `GITHUB_TOKEN` | GitHub token for contribution graph / star counts |
-| `NEXT_PUBLIC_GA_ID` | Google Analytics ID |
-
-Supabase expects a `views` table (`slug text primary key`, `count int`) with an RPC `increment_view_count(post_slug text)`, plus a `newsletter_subscribers` table (`email text primary key`).
+For Supabase-backed features, configure the `views` table and `increment_view_count(post_slug text)` RPC, as well as the `newsletter_subscribers` table.
 
 ## Project Structure
 
@@ -194,9 +189,10 @@ src/
 
 ## Connect
 
--   **Website:** [buddhsentripathi.com](https://buddhsentripathi.com)
+-   **GitHub:** [MbuyeloMich](https://github.com/MbuyeloMich)
 -   **LinkedIn:** [Mbuyelo Maluleke](https://www.linkedin.com/in/mbuyelo-maluleke-72705b227/)
 -   **Twitter/X:** [@tonym_43](https://x.com/tonym_43)
+-   **Email:** [newtoneffect0@gmail.com](mailto:newtoneffect0@gmail.com)
 
 ## Credits
 
