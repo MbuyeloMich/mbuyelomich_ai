@@ -4,6 +4,8 @@
 
 # Mbuyelo Maluleke — AI & Full-Stack Engineer
 
+[Visit the live portfolio](https://mbuyelollm.vercel.app/)
+
 I build practical software across **LLM-powered applications, AI agents, image-AI workflows, and full-stack products**. My work combines AI engineering with product-focused web development, using LangChain, TypeScript, Java, and modern cloud services.
 
 This portfolio brings together my **projects, professional experience, hackathon builds, and technical writing** in one place. It is built with Next.js, React, TypeScript, and Tailwind CSS.
