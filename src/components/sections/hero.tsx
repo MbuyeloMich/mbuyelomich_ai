@@ -96,7 +96,7 @@ function SocialPreviewCard({ loading, data, platform, username }: any) {
       <div className={`flex gap-3 relative z-10 ${data.banner ? "flex-col items-start -mt-12" : "items-center"}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={data.avatar || "https://github.com/buddhsen-tripathi.png"}
+          src={data.avatar || "https://github.com/MbuyeloMich.png"}
           alt={data.name}
           className={`rounded-full object-cover bg-background ${data.banner ? "h-[68px] w-[68px] border-[3px] border-card" : "h-14 w-14 border border-border"}`}
         />

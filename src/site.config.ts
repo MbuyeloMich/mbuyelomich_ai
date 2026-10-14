@@ -217,7 +217,6 @@ export const siteConfig = {
       techstacks: ["TanStack Start", "Drizzle ORM", "Cloudflare Workers", "Cloudflare D1", "Cloudflare R2", "Cloudflare Queues"],
       status: "building",
       link: "https://github.com/MbuyeloMich",
-      github: "buddhsen-tripathi/openvscan",
       preview: "https://cdn.buddhsentripathi.com/assets/projects/openvscan-light.png",
       previewDark: "https://cdn.buddhsentripathi.com/assets/projects/openvscan-dark.png",
     },
@@ -229,7 +228,6 @@ export const siteConfig = {
       techstacks: ["JavaScript", "TypeScript"],
       status: "active",
       link: "https://github.com/MbuyeloMich",
-      github: "buddhsen-tripathi/openai-api-helper",
       preview: "https://cdn.buddhsentripathi.com/assets/projects/npm.png",
     },
     {

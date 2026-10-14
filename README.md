@@ -4,8 +4,6 @@
 
 Personal portfolio and blog, live at [buddhsentripathi.com](https://buddhsentripathi.com). Built with Next.js 16 (App Router), TypeScript, Tailwind v4, and an MDX-powered blog backed by Cloudflare R2 and Supabase. The focus is on performance, SEO, and a clean developer experience.
 
-> The previous iteration of the portfolio lives on the [`ver/04-26`](https://github.com/buddhsen-tripathi/PortfolioWeb/tree/ver/04-26) branch.
-
 ## Features
 
 ### Core Pages
@@ -49,8 +47,8 @@ Follow these steps to get the project running locally:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/buddhsen-tripathi/PortfolioWeb.git
-    cd PortfolioWeb
+    git clone https://github.com/MbuyeloMich/mbuyelomich_ai.git
+    cd mbuyelomich_ai
     ```
 
 2.  **Install dependencies:**
@@ -195,8 +193,8 @@ src/
 ## Connect
 
 -   **Website:** [buddhsentripathi.com](https://buddhsentripathi.com)
--   **LinkedIn:** [buddhsen-tripathi](https://linkedin.com/in/buddhsen-tripathi)
--   **Twitter/X:** [@senbuilds](https://twitter.com/senbuilds)
+-   **LinkedIn:** [Mbuyelo Maluleke](https://www.linkedin.com/in/mbuyelo-maluleke-72705b227/)
+-   **Twitter/X:** [@tonym_43](https://x.com/tonym_43)
 
 ## Credits
 
@@ -214,4 +212,4 @@ This project is open source under the [MIT License](LICENSE).
 -   [Supabase](https://supabase.com/docs) - Open source Firebase alternative
 -   [Cloudflare R2](https://developers.cloudflare.com/r2/) - Object storage
 
-Built by [Buddhsen Tripathi](https://buddhsentripathi.com) 💙
+Built by Mbuyelo Maluleke 💙

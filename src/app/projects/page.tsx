@@ -14,9 +14,12 @@ export const metadata = buildMetadata({
 const Projects = async () => {
   const projectsWithStars = await Promise.all(
     projects.map(async (project) => {
-      if (!project.github) return { ...project, stars: null };
-      const stars = await fetchGitHubStars(project.github);
-      return { ...project, stars };
+      const github =
+        "github" in project && typeof project.github === "string"
+          ? project.github
+          : undefined;
+      const stars = github ? await fetchGitHubStars(github) : null;
+      return { ...project, github, stars };
     })
   );
 
