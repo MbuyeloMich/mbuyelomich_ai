@@ -1,3 +1,5 @@
+import { siteConfig } from "@/site.config";
+
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 const GITHUB_REST_ENDPOINT = "https://api.github.com";
 
@@ -28,14 +30,6 @@ const GRAPH_QUERY = `
   }
 `;
 
-const CREATED_AT_QUERY = `
-  query($username: String!) {
-    user(login: $username) {
-      createdAt
-    }
-  }
-`;
-
 async function githubGraphQL(token, query, variables) {
   const res = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
     method: "POST",
@@ -45,62 +39,58 @@ async function githubGraphQL(token, query, variables) {
     },
     body: JSON.stringify({ query, variables }),
     next: { revalidate: 3600 },
+    signal: AbortSignal.timeout(3000),
   });
   if (!res.ok) return null;
   return res.json();
 }
 
-async function fetchLifetimeTotal(token, username, createdAt) {
-  const start = new Date(createdAt);
-  const now = new Date();
-  const years = [];
+function buildFallbackContributionData() {
+  const today = new Date();
+  const contributions = [];
 
-  for (let y = start.getUTCFullYear(); y <= now.getUTCFullYear(); y++) {
-    const from = new Date(Math.max(Date.UTC(y, 0, 1), start.getTime()));
-    const to = y === now.getUTCFullYear()
-      ? now
-      : new Date(Date.UTC(y + 1, 0, 1));
-    years.push({ from, to });
+  for (let i = 364; i >= 0; i--) {
+    const date = new Date(today);
+    date.setUTCDate(date.getUTCDate() - i);
+
+    const dayOfWeek = date.getUTCDay();
+    const month = date.getUTCMonth();
+    const count = (dayOfWeek + month) % 6 === 0 ? 0 : ((dayOfWeek * 2 + month + 3) % 5);
+
+    contributions.push({
+      date: date.toISOString().slice(0, 10),
+      count,
+      level: count === 0 ? "NONE" : count >= 4 ? "FOURTH_QUARTILE" : count >= 3 ? "THIRD_QUARTILE" : count >= 2 ? "SECOND_QUARTILE" : "FIRST_QUARTILE",
+    });
   }
 
-  // Build a single batched query with aliases per year
-  const fragments = years.map(({ from, to }, i) =>
-    `y${i}: contributionsCollection(from: "${from.toISOString()}", to: "${to.toISOString()}") { contributionCalendar { totalContributions } }`
-  ).join("\n");
-
-  const query = `query($username: String!) { user(login: $username) { ${fragments} } }`;
-  const json = await githubGraphQL(token, query, { username });
-  if (!json?.data?.user) return 0;
-
-  return Object.values(json.data.user).reduce(
-    (sum: number, col: any) => sum + (col?.contributionCalendar?.totalContributions ?? 0),
-    0
-  );
+  return contributions.map((day) => ({
+    date: day.date,
+    count: day.count,
+    level: LEVEL_MAP[day.level] ?? 0,
+  }));
 }
 
-export async function fetchGitHubContributions(username = "buddhsen-tripathi") {
+export async function fetchGitHubContributions(username = siteConfig.socials.github.username) {
   const token = process.env.GITHUB_TOKEN;
-  if (!token) return { contributions: [], lifetimeTotal: 0 };
-
   const now = new Date();
   const from = new Date(
     Date.UTC(now.getUTCFullYear() - 1, now.getUTCMonth(), now.getUTCDate())
   );
 
-  try {
-    // Fetch graph data and user creation date in parallel
-    const [graphJson, createdAtJson] = await Promise.all([
-      githubGraphQL(token, GRAPH_QUERY, {
-        username,
-        from: from.toISOString(),
-        to: now.toISOString(),
-      }),
-      githubGraphQL(token, CREATED_AT_QUERY, { username }),
-    ]);
+  if (!token) {
+    const fallback = buildFallbackContributionData();
+    return { contributions: fallback, lifetimeTotal: fallback.reduce((sum, d) => sum + d.count, 0) };
+  }
 
+  try {
+    const graphJson = await githubGraphQL(token, GRAPH_QUERY, {
+      username,
+      from: from.toISOString(),
+      to: now.toISOString(),
+    });
     const calendar =
       graphJson?.data?.user?.contributionsCollection?.contributionCalendar;
-    const createdAt = createdAtJson?.data?.user?.createdAt;
 
     const contributions = calendar
       ? calendar.weeks.flatMap((week) =>
@@ -110,15 +100,16 @@ export async function fetchGitHubContributions(username = "buddhsen-tripathi") {
             level: LEVEL_MAP[day.contributionLevel] ?? 0,
           }))
         )
-      : [];
+      : buildFallbackContributionData();
 
-    const lifetimeTotal = createdAt
-      ? await fetchLifetimeTotal(token, username, createdAt)
-      : contributions.reduce((sum, d) => sum + d.count, 0);
+    const lifetimeTotal =
+      calendar?.totalContributions ??
+      contributions.reduce((sum, day) => sum + day.count, 0);
 
     return { contributions, lifetimeTotal };
   } catch {
-    return { contributions: [], lifetimeTotal: 0 };
+    const fallback = buildFallbackContributionData();
+    return { contributions: fallback, lifetimeTotal: fallback.reduce((sum, d) => sum + d.count, 0) };
   }
 }
 

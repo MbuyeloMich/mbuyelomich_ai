@@ -1,23 +1,23 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import LocationIcon from "@/components/icons/location";
 import BoltIcon from "@/components/icons/bolt";
 import CloudSunIcon from "@/components/icons/cloud-sun";
 import SeikoWatchModal from "@/components/watch-modal";
 import IconTelescopeTripod from "@/components/icons/telescope-tripod";
-import { useViews } from "@/components/blog/views-context";
 import { siteConfig } from "@/site.config";
 
-const SITE_VISITORS_SLUG = "_site_visitors";
+const SITE_VISIT_COUNT_KEY = "site-visit-count";
+const SITE_VISIT_REQUESTED_KEY = "site-visit-requested";
 
 const Footer = () => {
   const [time, setTime] = useState<Date | null>(null);
   const [battery, setBattery] = useState<number | null>(null);
   const [location, setLocation] = useState<string | null>(null);
   const [weather, setWeather] = useState<string | null>(null);
-  const { getViews, incrementViews, prefetchViews } = useViews();
-  const visitorCount = getViews(SITE_VISITORS_SLUG);
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
 
   useEffect(() => {
     const tick = () => setTime(new Date());
@@ -38,16 +38,38 @@ const Footer = () => {
   }, []);
 
   useEffect(() => {
-    // Prefetch so the count can render from GET even if the increment POST is slow
-    // or a Strict Mode remount races the in-flight request.
-    prefetchViews([SITE_VISITORS_SLUG]);
-    incrementViews(SITE_VISITORS_SLUG);
-  }, [incrementViews, prefetchViews]);
+    const cachedCount = sessionStorage.getItem(SITE_VISIT_COUNT_KEY);
+    if (cachedCount !== null) {
+      const count = Number(cachedCount);
+      if (Number.isFinite(count)) {
+        setVisitorCount(count);
+        return;
+      }
+    }
+
+    if (sessionStorage.getItem(SITE_VISIT_REQUESTED_KEY)) return;
+    sessionStorage.setItem(SITE_VISIT_REQUESTED_KEY, "true");
+
+    fetch("/api/visitors", { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`Visitor counter request failed: ${res.status}`);
+        const data = await res.json();
+        const count = Number(data.count);
+        if (!Number.isFinite(count)) throw new Error("Visitor counter returned an invalid count");
+        sessionStorage.setItem(SITE_VISIT_COUNT_KEY, String(count));
+        setVisitorCount(count);
+      })
+      .catch((error) => {
+        console.error("Unable to load website visit count:", error);
+        sessionStorage.removeItem(SITE_VISIT_REQUESTED_KEY);
+      });
+  }, []);
 
   useEffect(() => {
-    fetch("/api/location")
-      .then((res) => res.json())
-      .then((data) => {
+    const setFromServerLocation = async () => {
+      try {
+        const res = await fetch("/api/location");
+        const data = await res.json();
         const city = data.city || "";
         const country = data.country || "";
         if (city && country) {
@@ -58,8 +80,47 @@ const Footer = () => {
         if (data.weather) {
           setWeather(`${data.weather.temperature}${data.weather.unit}`);
         }
-      })
-      .catch(() => setLocation(null));
+      } catch {
+        setLocation(null);
+      }
+    };
+
+    const setFromBrowserGeolocation = () => {
+      if (!navigator.geolocation) return;
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
+              {
+                headers: {
+                  "Accept-Language": "en",
+                  "User-Agent": "PortfolioWeb/1.0",
+                },
+              }
+            );
+            if (!res.ok) return;
+            const data = await res.json();
+            const city = data.address?.city || data.address?.town || data.address?.village || "";
+            const state = data.address?.state || "";
+            const country = data.address?.country || "";
+            const formatted = [city || state, country].filter(Boolean).join(", ");
+            if (formatted) setLocation(formatted);
+          } catch {
+            // ignore reverse-geocode failures and keep server-based location values
+          }
+        },
+        () => {
+          // Ignore denials and fall back to server-based location detection.
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+      );
+    };
+
+    setFromServerLocation();
+    setFromBrowserGeolocation();
   }, []);
 
   const formattedDate = time
@@ -112,9 +173,29 @@ const Footer = () => {
               {visitorCount !== null && (
                 <span className="flex items-center gap-1">
                   <IconTelescopeTripod className="h-3 w-3" />
-                  {visitorCount.toLocaleString()} visitors
+                  {visitorCount.toLocaleString()} website visits
                 </span>
               )}
+              <span
+                className="flex items-center gap-1"
+                title="Komarev counts badge image loads, not verified profile opens. The badge can be cached, and loading it here may also affect its count."
+              >
+                <a
+                  href="https://github.com/MbuyeloMich"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
+                  GitHub
+                </a>
+                <Image
+                  src="https://komarev.com/ghpvc/?username=MbuyeloMich"
+                  alt="GitHub profile views"
+                  width={111}
+                  height={20}
+                  unoptimized
+                />
+              </span>
               {battery !== null && (
                 <span className="flex items-center gap-1">
                   <BoltIcon className="h-3 w-3" />

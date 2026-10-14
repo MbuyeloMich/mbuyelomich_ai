@@ -7,7 +7,7 @@ import GithubIcon from "@/components/icons/github";
 import LinkedinIcon from "@/components/icons/linkedin";
 import { IoIosMail } from "react-icons/io";
 import { SiLeetcode, SiCodeforces, SiTryhackme } from "react-icons/si";
-import { FileText, Check, Calendar, ArrowUpRight } from "lucide-react";
+import { Check, Calendar, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -47,7 +47,7 @@ const socialLinks = (Object.entries(siteConfig.socials) as [SocialPlatform, type
 
 const connectLinks = [
   {
-    label: "schedule a meet",
+    label: "Email me",
     href: siteConfig.contact.calUrl,
     icon: <Calendar className="h-3.5 w-3.5" />,
     endIcon: <ArrowUpRight className="h-3 w-3" />,
@@ -57,12 +57,6 @@ const connectLinks = [
     label: "Email",
     icon: <IoIosMail size="14px" />,
     copyText: siteConfig.contact.email,
-  },
-  {
-    label: "Resume",
-    href: siteConfig.contact.resumeUrl,
-    icon: <FileText className="h-3.5 w-3.5" />,
-    external: true,
   },
 ];
 
@@ -306,26 +300,26 @@ const Hero = ({ contributionData = [], lifetimeTotal = 0 }: HeroProps) => {
           <div className={`min-w-0 ${GeistPixelSquare.className}`}>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h1 className="text-2xl font-bold uppercase tracking-tight md:text-4xl">
-                Buddhsen Tripathi
+                Mbuyelo Maluleke
               </h1>
             </div>
 
             <p className="mt-2 text-[11px] font-medium uppercase tracking-widest text-muted-foreground md:text-sm">
-              Full-Stack Developer &bull; MS CS @ NYU
+              Software Professional &bull; AI & Full-Stack Engineer
             </p>
           </div>
 
           <Image
-            src={`${siteConfig.assetsUrl}/profpic2.jpg`}
-            alt="Buddhsen Tripathi"
+            src="/profile.jpg"
+            alt="Mbuyelo Maluleke"
             width={128}
             height={128}
             priority
             className="h-20 w-20 shrink-0 rounded-full border border-black/8 object-cover dark:hidden md:h-28 md:w-28"
           />
           <Image
-            src={`${siteConfig.assetsUrl}/profpic.jpg`}
-            alt="Buddhsen Tripathi"
+            src="/profile.jpg"
+            alt="Mbuyelo Maluleke"
             width={128}
             height={128}
             priority
@@ -340,10 +334,10 @@ const Hero = ({ contributionData = [], lifetimeTotal = 0 }: HeroProps) => {
             About Me
           </h5>
           <p className="text-xs font-space-mono md:text-base md:leading-relaxed text-muted-foreground">
-            Hey there! I&apos;m a <strong className="font-semibold text-foreground">software professional</strong> passionate about building <strong className="font-semibold text-foreground">scalable, user-centric applications</strong> with expertise in <strong className="font-semibold text-foreground">cloud infrastructure and microservices architecture</strong>.
+            I turn ideas into useful software. I&apos;m an <strong className="font-semibold text-foreground">AI and full-stack engineer</strong> building <strong className="font-semibold text-foreground">LLM-powered applications, AI agents, and image-AI workflows</strong> with tools like <strong className="font-semibold text-foreground">LangChain</strong>—combining practical AI engineering with scalable, user-focused product development.
           </p>
           <p className="mt-4 text-xs font-space-mono md:text-base md:leading-relaxed text-muted-foreground">
-            Currently pursuing my <strong className="font-semibold text-foreground"><a href="https://www.nyu.edu" target="_blank" className="underline">MS in Computer Science at NYU</a></strong> with <strong className="font-semibold text-foreground">2+ years</strong> of experience in full-stack development. Previously spent over two years at <strong className="font-semibold text-foreground"><a href="https://amadeus.com/en" target="_blank" className="underline">Amadeus</a></strong> working on <strong className="font-semibold text-foreground">Java, Spring Boot, Angular, and Azure-backed microservices</strong>. In my free time, I enjoy <strong className="font-semibold text-foreground">building projects</strong>, exploring <strong className="font-semibold text-foreground">cybersecurity</strong>, and contributing to <strong className="font-semibold text-foreground">open-source</strong>.
+            Currently pursuing the <strong className="font-semibold text-foreground"><a href="https://www.nvidia.com/en-us/training/" target="_blank" className="underline">Building AI-Powered Material Generation for Omniverse With DGX Cloud</a></strong> course at <strong className="font-semibold text-foreground">NVIDIA</strong>, with <strong className="font-semibold text-foreground">3+ years</strong> of project experience. Currently at <strong className="font-semibold text-foreground">High Hype</strong>, working on <strong className="font-semibold text-foreground">Java, TypeScript, UX/UI design, and C#</strong>. In my free time, I enjoy <strong className="font-semibold text-foreground">building projects</strong>, exploring <strong className="font-semibold text-foreground">graphic design</strong>, and contributing to <strong className="font-semibold text-foreground">open-source</strong>.
           </p>
         </motion.div>
 
@@ -383,7 +377,7 @@ const Hero = ({ contributionData = [], lifetimeTotal = 0 }: HeroProps) => {
             Let&apos;s connect
           </h5>
           <p className="mb-4 font-space-mono text-xs leading-relaxed text-muted-foreground md:text-sm">
-            Interested in working together? Feel free to schedule a meet!
+            Interested in working together? Feel free to send me an email.
           </p>
           <div className="flex flex-wrap gap-2 p-1">
             {connectLinks.map(({ label, href, icon, endIcon, external, copyText }: any) => (

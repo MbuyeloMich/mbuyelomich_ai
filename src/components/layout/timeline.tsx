@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { TechBadge } from "@/lib/tech-icons";
+import { countUniqueExperienceMonths } from "@/lib/experience-duration";
 
 type BodySeg = { text: string; bold?: boolean };
 
@@ -12,8 +13,10 @@ interface ExperienceRaw {
   company: string;
   year: string;
   type?: string;
+  focus?: string;
   location?: string;
   logo?: string;
+  logoBackground?: string;
   logoPadding?: boolean;
   invertLogo?: boolean;
   responsibility: BodySeg[][] | string[];
@@ -24,6 +27,7 @@ interface RoleBlockProps {
   role: string;
   year: string;
   type?: string;
+  focus?: string;
   responsibility: BodySeg[][] | string[];
   techstacks: string[];
   index: number;
@@ -59,6 +63,7 @@ const RoleBlock = ({
   role,
   year,
   type,
+  focus,
   responsibility,
   techstacks,
   index,
@@ -83,16 +88,21 @@ const RoleBlock = ({
         className="group flex w-full items-start justify-between gap-3 text-left"
       >
         <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
             <h3 className="font-doto text-base font-medium leading-snug text-foreground transition-colors group-hover:text-sky-500 dark:group-hover:text-sky-400 md:text-xl md:leading-none md:uppercase">
               {role}
             </h3>
-            {type && (
-              <span className="rounded-xs border border-black/8 px-1.5 py-0.5 font-space-mono text-[9px] uppercase tracking-wide text-muted-foreground dark:border-white/8 md:text-[10px]">
-                {type}
+            {focus && (
+              <span className="font-doto text-base font-medium leading-snug text-foreground md:text-xl md:leading-none md:uppercase">
+                [{focus}]
               </span>
             )}
           </div>
+          {type && (
+            <p className="mt-1 font-space-mono text-[10px] uppercase tracking-wide text-muted-foreground md:text-[11px]">
+              {type}
+            </p>
+          )}
           <p className="mt-2 font-space-mono text-[11px] text-muted-foreground md:text-xs">
             {year}
             <span className="mx-1.5 text-foreground/20">·</span>
@@ -188,7 +198,13 @@ const Timeline = ({ items }: { items: ExperienceRaw[] }) => {
     <div className="mt-4 space-y-16 px-2 md:mt-6 md:space-y-20 md:px-0">
       {companies.map((group, companyIndex) => {
         const first = group.roles[0];
-        const totalMonths = group.roles.reduce((sum, r) => sum + monthsBetween(r.year), 0);
+        const totalRoleMonths = group.roles.reduce(
+          (sum, role) => sum + monthsBetween(role.year),
+          0,
+        );
+        const totalMonths = countUniqueExperienceMonths(
+          group.roles.map((role) => role.year),
+        );
         const { start } = parseYearRange(group.roles[group.roles.length - 1].year);
         const { end } = parseYearRange(group.roles[0].year);
 
@@ -205,7 +221,7 @@ const Timeline = ({ items }: { items: ExperienceRaw[] }) => {
                 {first.logo && (
                   <div
                     className={`flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-black/8 dark:border-white/8 ${
-                      first.logo ? "bg-white" : "bg-black/3 dark:bg-white/5"
+                      first.logoBackground ?? (first.logo ? "bg-white" : "bg-black/3 dark:bg-white/5")
                     }`}
                   >
                     <Image
@@ -213,7 +229,7 @@ const Timeline = ({ items }: { items: ExperienceRaw[] }) => {
                       alt={`${group.company} logo`}
                       width={48}
                       height={48}
-                      className={`h-full w-full object-cover ${first.logoPadding ? "p-1.5" : ""} ${first.invertLogo ? "dark:invert" : ""}`}
+                      className={`h-full w-full object-cover object-center ${first.logoPadding ? "p-1.5" : ""} ${first.invertLogo ? "dark:invert" : ""}`}
                     />
                   </div>
                 )}
@@ -240,8 +256,8 @@ const Timeline = ({ items }: { items: ExperienceRaw[] }) => {
 
               <div className="mt-5">
                 <div className="flex h-1.5 overflow-hidden rounded-full bg-black/5 dark:bg-white/6">
-                  {[...group.roles].reverse().map((role, i, arr) => {
-                    const share = (monthsBetween(role.year) / totalMonths) * 100;
+                  {group.roles.map((role, i, arr) => {
+                    const share = (monthsBetween(role.year) / totalRoleMonths) * 100;
                     return (
                       <div
                         key={role.role}
@@ -257,7 +273,7 @@ const Timeline = ({ items }: { items: ExperienceRaw[] }) => {
                   })}
                 </div>
                 <div className="mt-2 flex justify-between font-space-mono text-[9px] text-muted-foreground/55">
-                  {[...group.roles].reverse().map((role) => (
+                  {group.roles.map((role) => (
                     <span key={role.role}>{shortRoleLabel(role.role, role.type)}</span>
                   ))}
                 </div>
@@ -271,6 +287,7 @@ const Timeline = ({ items }: { items: ExperienceRaw[] }) => {
                   role={role.role}
                   year={role.year}
                   type={role.type}
+                  focus={role.focus}
                   responsibility={role.responsibility}
                   techstacks={role.techstacks}
                   index={i}

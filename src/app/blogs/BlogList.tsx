@@ -139,7 +139,7 @@ export default function BlogList({ blogPosts }) {
                           </h2>
                           {post.url && (
                             <span className="rounded-xs border border-black/10 px-1.5 py-px text-[10px] leading-none text-muted-foreground dark:border-white/10">
-                              𝕏 article
+                              {post.externalLabel ?? "𝕏 article"}
                             </span>
                           )}
                         </div>

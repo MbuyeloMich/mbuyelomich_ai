@@ -10,7 +10,7 @@ import ViewCounter from "@/components/blog/view-counter";
 import ReadingProgress from "@/components/blog/reading-progress";
 import RelatedPosts from "@/components/blog/related-posts";
 import NewsletterSubscription from "@/components/common/newsletter-subscription";
-import { getBlogPostFromS3, getBlogSlugsFromS3 } from "@/lib/r2Client";
+import { getAllBlogPostsFromS3, getBlogPostFromS3 } from "@/lib/r2Client";
 import { getReadingTime } from "../utils";
 import { getBlogPostingSchema, getBreadcrumbSchema } from "@/lib/jsonLd";
 import { buildMetadata } from "@/lib/metadata";
@@ -19,8 +19,8 @@ import { siteConfig } from "@/site.config";
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const slugs = await getBlogSlugsFromS3();
-  return slugs;
+  const posts = await getAllBlogPostsFromS3();
+  return posts.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }) {

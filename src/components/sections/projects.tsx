@@ -57,9 +57,7 @@ const Projects = ({
 }: ProjectsProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const Illustration = illustration ? projectIllustrations[illustration] : null;
-  const href = stars !== null && stars !== undefined && github
-    ? `https://github.com/${github}`
-    : link;
+  const href = link ?? (github ? `https://github.com/${github}` : undefined);
 
   return (
     <motion.a

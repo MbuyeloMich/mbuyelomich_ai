@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/layout";
 import BlogTabs from "./BlogTabs";
 import { getAllBlogPosts } from "./utils";
-import { twitterArticles } from "./articles";
+import { legacyPublicArticles, twitterArticles } from "./articles";
 import { buildMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/site.config";
 
@@ -21,6 +21,9 @@ export default async function BlogsPage() {
   const technicalPosts = [
     ...allPosts.filter((post) => post.type !== "personal"),
     ...twitterArticles,
+    ...legacyPublicArticles.filter(
+      (article) => !allPosts.some((post) => post.slug === article.slug),
+    ),
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const personalPosts = allPosts.filter((post) => post.type === "personal");

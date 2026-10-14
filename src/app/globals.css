@@ -17,7 +17,7 @@
 @theme {
   --font-inter: var(--font-inter);
   --font-cera: var(--font-cera);
-  --font-doto: 'Doto', sans-serif;
+  --font-doto: var(--font-doto-local), sans-serif;
   --font-space-mono: var(--font-space-mono), monospace;
 
   --text-sm: 0.8rem;
@@ -221,4 +221,3 @@
     @apply bg-background text-foreground;
   }
 }
-

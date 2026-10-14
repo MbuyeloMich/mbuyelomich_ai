@@ -73,6 +73,7 @@ export const metadata = {
 
 import { GeistPixelSquare } from "geist/font/pixel";
 import { Space_Mono, Press_Start_2P } from "next/font/google";
+import localFont from "next/font/local";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -87,6 +88,11 @@ const pressStart = Press_Start_2P({
   variable: "--font-press-start",
   display: "swap",
 });
+const doto = localFont({
+  src: "../utils/fonts/Doto-VariableFont.ttf",
+  variable: "--font-doto-local",
+  display: "swap",
+});
 
 export default function RootLayout({ children }) {
   const jsonLd = [
@@ -96,20 +102,10 @@ export default function RootLayout({ children }) {
   ];
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${spaceMono.variable} ${pressStart.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${spaceMono.variable} ${pressStart.variable} ${doto.variable}`}>
       <head>
         <meta name="theme-color" content={siteConfig.seo.themeColor} />
         <meta name="color-scheme" content="dark light" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap"
-          rel="stylesheet"
-        />
         <link
           rel="alternate"
           type="application/rss+xml"

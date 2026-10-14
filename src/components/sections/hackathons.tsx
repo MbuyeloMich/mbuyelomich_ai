@@ -16,6 +16,7 @@ const linkMeta = (url: string): { label: string; icon: React.ReactNode } => {
     if (host === "devpost.com") return { label: "Devpost", icon: <SiDevpost className="h-4 w-4" /> };
     if (host === "builderbase.com") return { label: "Event", icon: <ArrowUpRight className="h-4 w-4" /> };
     if (host === "luma.com") return { label: "Event", icon: <ArrowUpRight className="h-4 w-4" /> };
+    if (host === "instagram.com") return { label: "Event", icon: <ArrowUpRight className="h-4 w-4" /> };
     if (host === "linkedin.com") return { label: "LinkedIn", icon: <LinkedinIcon className="h-4 w-4" /> };
     return { label: host, icon: <ArrowUpRight className="h-4 w-4" /> };
   } catch {

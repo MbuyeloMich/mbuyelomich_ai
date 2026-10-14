@@ -2,6 +2,7 @@ import Layout from "@/components/layout/layout";
 import Timeline from "@/components/layout/timeline";
 import { experiences } from "@/constants";
 import { buildMetadata } from "@/lib/metadata";
+import { countUniqueExperienceMonths } from "@/lib/experience-duration";
 
 export const metadata = buildMetadata({
   title: "Experience",
@@ -39,9 +40,8 @@ function experienceHeadline(totalMonths: number) {
 }
 
 const Experience = () => {
-  const totalMonths = experiences.reduce(
-    (sum, e) => sum + monthsBetween(e.year),
-    0
+  const totalMonths = countUniqueExperienceMonths(
+    experiences.map((experience) => experience.year),
   );
   const items = [...experiences].reverse();
 
