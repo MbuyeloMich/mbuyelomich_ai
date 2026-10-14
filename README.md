@@ -1,4 +1,6 @@
-<img width="1920" height="1280" alt="image" src="https://github.com/user-attachments/assets/75f5f4b8-d633-423e-b204-e037f6c95ad3" />
+<p align="center">
+  <img src="./public/portfolio-readme-preview.png" alt="Mbuyelo Maluleke portfolio homepage" width="100%" />
+</p>
 
 ## Project Overview
 
