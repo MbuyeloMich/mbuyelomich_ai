@@ -310,7 +310,7 @@ const Hero = ({ contributionData = [], lifetimeTotal = 0 }: HeroProps) => {
           </div>
 
           <Image
-            src="/profile.jpg"
+            src="/linkedin.png"
             alt="Mbuyelo Maluleke"
             width={128}
             height={128}
@@ -318,7 +318,7 @@ const Hero = ({ contributionData = [], lifetimeTotal = 0 }: HeroProps) => {
             className="h-20 w-20 shrink-0 rounded-full border border-black/8 object-cover dark:hidden md:h-28 md:w-28"
           />
           <Image
-            src="/profile.jpg"
+            src="/linkedin.png"
             alt="Mbuyelo Maluleke"
             width={128}
             height={128}
